@@ -246,7 +246,7 @@ function updateHeatmap() {
     const x = d3.scaleBand()
         .domain(controls)
         .range([0, width])
-        .padding(0.01);
+        .padding(0.05);
 
     const y = d3.scaleBand()
         .domain(families)
@@ -717,7 +717,7 @@ function showModal(data) {
         <p><strong>Famille:</strong> ${data.family}</p>
         <p><strong>Score:</strong> ${data.score}%</p>
         <p><strong>Année:</strong> ${data.year}</p>
-        <p><strong>Description:</strong> ${data.definition || "Non disponible"}</p>
+        ${data.definition ? `<p><strong>Description:</strong> ${data.definition}</p>` : ``}
     `;
     modal.style.display = "block";
 }
