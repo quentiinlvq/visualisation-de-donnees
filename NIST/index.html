@@ -95,6 +95,21 @@
         </div>
     </div>
 
-    <script src="./script.js"></script>
+    <script>
+        // Chargement statique du CSV via fetch sur un chemin relatif (fonctionne sur GitHub Pages)
+        async function fetchCsvAsText(path) {
+            const response = await fetch(path);
+            if (!response.ok) throw new Error("Erreur lors du chargement des données CSV");
+            return await response.text();
+        }
+        fetchCsvAsText("cyberdatasetnist.csv").then(csv => {
+            window.csvData = csv; // rendu accessible globalement
+            const script = document.createElement("script");
+            script.src = "./script.js";
+            document.body.appendChild(script);
+        }).catch(err => {
+            document.body.innerHTML = '<p style="color:red;text-align:center;margin-top:40px">Erreur lors du chargement des données CSV : ' + err.message + '</p>';
+        });
+    </script>
 </body>
 </html>
