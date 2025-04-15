@@ -13,6 +13,24 @@
             <h1>Visualisation de la Conformité NIST SP 800-53</h1>
         </header>
 
+        <section class="intro" style="margin-bottom: 30px; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            <h2 style="margin-top: 0;">À propos du Dashboard</h2>
+            <p>
+                Ce tableau de bord interactif a été conçu pour visualiser les niveaux de conformité des contrôles de sécurité 
+                définis dans la norme <strong>NIST SP 800-53</strong>. En s’appuyant sur un ensemble de données réelles, il permet de :
+            </p>
+            <ul style="padding-left: 20px;">
+                <li>Filtrer les données par année, par famille de contrôle et par score minimum ;</li>
+                <li>Explorer les scores moyens par famille grâce à divers types de visualisations (heatmap, radar, ligne, treemap, etc.) ;</li>
+                <li>Analyser l’évolution des scores dans le temps et par catégorie de contrôle ;</li>
+                <li>Accéder à un tableau détaillé et interactif de chaque contrôle de conformité.</li>
+            </ul>
+            <p>
+                Cet outil vise à faciliter la compréhension, le suivi et la prise de décision autour des efforts de cybersécurité
+                d’une organisation, en mettant en lumière les zones de force et les axes d’amélioration possibles.
+            </p>
+        </section>
+
         <div class="controls">
             <div class="filter-group">
                 <div class="year-control">
@@ -35,25 +53,29 @@
         </div>
 
         <div class="visualizations">
-            <div class="viz-section">
-                <div class="viz-card">
-                    <h2>Heatmap des Scores</h2>
-                    <div id="heatmap-container"></div>
-                </div>
-                <div class="viz-card">
-                    <h2>Graphique en Barres</h2>
-                    <div id="barchart-container"></div>
-                </div>
+            <div class="viz-card">
+                <h2>Heatmap des Scores</h2>
+                <div id="heatmap-container" class="viz-container"></div>
             </div>
-            <div class="viz-section">
-                <div class="viz-card">
-                    <h2>Radar Chart</h2>
-                    <div id="radar-container"></div>
-                </div>
-                <div class="viz-card">
-                    <h2>Évolution des Scores</h2>
-                    <div id="linechart-container"></div>
-                </div>
+            <div class="viz-card">
+                <h2>Graphique en Barres</h2>
+                <div id="barchart-container" class="viz-container"></div>
+            </div>
+            <div class="viz-card">
+                <h2>Radar Chart</h2>
+                <div id="radar-container" class="viz-container"></div>
+            </div>
+            <div class="viz-card">
+                <h2>Évolution des Scores</h2>
+                <div id="linechart-container" class="viz-container"></div>
+            </div>
+            <div class="viz-card">
+                <h2>Graphique en Secteurs (Pie Chart)</h2>
+                <div id="piechart-container" class="viz-container"></div>
+            </div>
+            <div class="viz-card">
+                <h2>Treemap des Contrôles de Conformité</h2>
+                <div id="treemap-container" class="viz-container"></div>
             </div>
         </div>
 
@@ -75,4 +97,4 @@
 
     <script src="./script.js"></script>
 </body>
-</html> 
+</html>

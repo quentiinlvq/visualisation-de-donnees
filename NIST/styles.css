@@ -117,25 +117,22 @@ select {
     margin-bottom: 30px;
 }
 
-.viz-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
 .viz-card {
     background-color: var(--card-background);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-#heatmap-container,
-#barchart-container,
-#radar-container,
-#linechart-container {
-    height: 300px;
+.viz-container {
+    flex-grow: 1;
+    height: 100%;
     width: 100%;
+    position: relative;
 }
 
 .table-section {
@@ -246,35 +243,3 @@ tr:hover {
         margin: 5% auto;
     }
 }
-
-.graph-subtitle {
-    text-align: center;
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 10px;
-    padding: 0 20px;
-}
-
-.legend {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 15px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 4px;
-}
-
-.legend span {
-    display: flex;
-    align-items: center;
-    font-size: 0.9em;
-}
-
-.legend span span {
-    width: 12px;
-    height: 12px;
-    margin-right: 5px;
-    border-radius: 2px;
-} 

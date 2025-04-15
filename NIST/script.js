@@ -9,7 +9,7 @@ let selectedYear = 2022;
 let selectedTableYear = 'all';
 let selectedFamily = 'all';
 let selectedScore = 0;
-let sortDirection = {}; // Pour stocker la direction du tri pour chaque colonne
+let sortDirection = {}; 
 
 // Création du tooltip
 const tooltip = d3.select("#tooltip");
@@ -33,101 +33,68 @@ function createSigleFromName(controlName) {
 // Fonction pour charger et traiter les données
 async function loadData() {
     try {
-        // Création d'un input file
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.csv';
-        fileInput.style.display = 'none';
-        document.body.appendChild(fileInput);
-
-        // Création d'un bouton pour déclencher la sélection du fichier
-        const loadButton = document.createElement('button');
-        loadButton.textContent = 'Charger le fichier CSV';
-        loadButton.style.position = 'fixed';
-        loadButton.style.top = '20px';
-        loadButton.style.right = '20px';
-        loadButton.style.zIndex = '1000';
-        loadButton.style.padding = '10px 20px';
-        loadButton.style.backgroundColor = '#3498db';
-        loadButton.style.color = 'white';
-        loadButton.style.border = 'none';
-        loadButton.style.borderRadius = '4px';
-        loadButton.style.cursor = 'pointer';
-        document.body.appendChild(loadButton);
-
-        // Gestionnaire d'événements pour le bouton
-        loadButton.onclick = () => fileInput.click();
-
-        // Gestionnaire d'événements pour la sélection du fichier
-        fileInput.onchange = (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const csvText = e.target.result;
-                    
-                    // Standardisation des codes famille
-                    data = d3.csvParse(csvText, d => {
-                        let familyCode = d.Control_Family_Code;
-                        
-                        // Si pas de code famille ou code trop long, créer à partir du nom de contrôle
-                        if (!familyCode || familyCode.length > 3) {
-                            const controlName = d.Control_Name || '';
-                            // Codes standards connus
-                            if (controlName.includes('Access Control')) familyCode = 'AC';
-                            else if (controlName.includes('Awareness and Training')) familyCode = 'AT';
-                            else if (controlName.includes('Audit')) familyCode = 'AU';
-                            else if (controlName.includes('Security Assessment')) familyCode = 'CA';
-                            else if (controlName.includes('Configuration Management')) familyCode = 'CM';
-                            else if (controlName.includes('Contingency Planning')) familyCode = 'CP';
-                            else if (controlName.includes('Identification')) familyCode = 'IA';
-                            else if (controlName.includes('Incident Response')) familyCode = 'IR';
-                            else if (controlName.includes('Maintenance')) familyCode = 'MA';
-                            else if (controlName.includes('Media Protection')) familyCode = 'MP';
-                            else if (controlName.includes('Physical')) familyCode = 'PE';
-                            else if (controlName.includes('Planning')) familyCode = 'PL';
-                            else if (controlName.includes('Personnel Security')) familyCode = 'PS';
-                            else if (controlName.includes('Risk Assessment')) familyCode = 'RA';
-                            else if (controlName.includes('System and Services')) familyCode = 'SA';
-                            else if (controlName.includes('System and Communications')) familyCode = 'SC';
-                            else if (controlName.includes('System and Information')) familyCode = 'SI';
-                            else if (controlName.includes('Supply Chain')) familyCode = 'SCRM';
-                            else if (controlName.includes('Program Management')) familyCode = 'PM';
-                            else {
-                                // Créer un sigle à partir du nom pour les cas non standards
-                                familyCode = createSigleFromName(controlName);
-                            }
-                        }
-
-                        return {
-                            year: +d.Year,
-                            date: new Date(d.Date),
-                            controlSet: d.Control_Set,
-                            control: d.Control,
-                            controlName: d.Control_Name,
-                            family: familyCode,
-                            definition: d.Definition,
-                            score: +d.Compliance_Score,
-                            reportingDate: new Date(d.Reporting_Date),
-                            objectId: +d.ObjectId
-                        };
-                    });
-                    
-                    console.log("Données parsées:", data.length, "lignes");
-                    
-                    // Mise à jour des filtres
-                    updateFilters();
-                    
-                    // Mise à jour initiale des visualisations
-                    updateVisualizations();
-
-                    // Suppression du bouton et de l'input
-                    loadButton.remove();
-                    fileInput.remove();
-                };
-                reader.readAsText(file);
+        // Chargement direct du fichier CSV avec le bon chemin
+        const response = await fetch('cyberdatasetnist.csv');
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP! statut: ${response.status}`);
+        }
+        const csvText = await response.text();
+        
+        // Standardisation des codes famille
+        data = d3.csvParse(csvText, d => {
+            let familyCode = d.Control_Family_Code;
+            
+            // Si pas de code famille ou code trop long, créer à partir du nom de contrôle
+            if (!familyCode || familyCode.length > 3) {
+                const controlName = d.Control_Name || '';
+                // Codes standards connus
+                if (controlName.includes('Access Control')) familyCode = 'AC';
+                else if (controlName.includes('Awareness and Training')) familyCode = 'AT';
+                else if (controlName.includes('Audit')) familyCode = 'AU';
+                else if (controlName.includes('Security Assessment')) familyCode = 'CA';
+                else if (controlName.includes('Configuration Management')) familyCode = 'CM';
+                else if (controlName.includes('Contingency Planning')) familyCode = 'CP';
+                else if (controlName.includes('Identification')) familyCode = 'IA';
+                else if (controlName.includes('Incident Response')) familyCode = 'IR';
+                else if (controlName.includes('Maintenance')) familyCode = 'MA';
+                else if (controlName.includes('Media Protection')) familyCode = 'MP';
+                else if (controlName.includes('Physical')) familyCode = 'PE';
+                else if (controlName.includes('Planning')) familyCode = 'PL';
+                else if (controlName.includes('Personnel Security')) familyCode = 'PS';
+                else if (controlName.includes('Risk Assessment')) familyCode = 'RA';
+                else if (controlName.includes('System and Services')) familyCode = 'SA';
+                else if (controlName.includes('System and Communications')) familyCode = 'SC';
+                else if (controlName.includes('System and Information')) familyCode = 'SI';
+                else if (controlName.includes('Supply Chain')) familyCode = 'SCRM';
+                else if (controlName.includes('Program Management')) familyCode = 'PM';
+                else {
+                    // Créer un sigle à partir du nom pour les cas non standards
+                    familyCode = createSigleFromName(controlName);
+                }
             }
-        };
+
+            return {
+                year: +d.Year,
+                date: new Date(d.Date),
+                controlSet: d.Control_Set,
+                control: d.Control,
+                controlName: d.Control_Name,
+                family: familyCode,
+                definition: d.Definition,
+                score: +d.Compliance_Score,
+                reportingDate: new Date(d.Reporting_Date),
+                objectId: +d.ObjectId
+            };
+        });
+        
+        console.log("Données parsées:", data.length, "lignes");
+        
+        // Mise à jour des filtres
+        updateFilters();
+        
+        // Mise à jour initiale des visualisations
+        updateVisualizations();
+
     } catch (error) {
         console.error("Erreur détaillée lors du chargement des données:", error);
         showError(`Erreur lors du chargement des données: ${error.message}`);
@@ -196,13 +163,164 @@ function filterData() {
     );
 }
 
-// Fonction pour mettre à jour toutes les visualisations
+// Ajout du graphique en secteurs (Pie Chart)
+function updatePieChart() {
+    const container = d3.select("#piechart-container");
+    container.selectAll("*").remove();
+
+    const containerWidth = container.node().getBoundingClientRect().width;
+    const containerHeight = container.node().getBoundingClientRect().height;
+    const width = containerWidth;
+    const height = containerHeight;
+    const radius = Math.min(width, height) / 2.5;
+
+    const svg = container.append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+    // Préparation des données
+    const familyData = d3.group(filteredData, d => d.family);
+    const processedData = Array.from(familyData, ([family, items]) => ({
+        family: family,
+        score: d3.mean(items, d => d.score),
+        count: items.length
+    })).filter(d => d.score > 0);
+
+    processedData.sort((a, b) => b.score - a.score);
+
+    const color = d3.scaleOrdinal()
+        .domain(processedData.map(d => d.family))
+        .range(d3.schemeTableau10);
+
+    const pie = d3.pie()
+        .value(d => d.score)
+        .sort(null);
+
+    const arc = d3.arc()
+        .innerRadius(radius * 0.6)
+        .outerRadius(radius);
+
+    const data_ready = pie(processedData);
+
+    // Segments du pie chart
+    svg.selectAll('path')
+        .data(data_ready)
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .attr('fill', d => color(d.data.family))
+        .attr("stroke", "white")
+        .style("stroke-width", "2px")
+        .style("opacity", 0.9)
+        .on("mouseover", function(event, d) {
+            d3.select(this).style("opacity", 1).style("stroke-width", "3px");
+            tooltip.style("opacity", 1)
+                .html(`Famille: ${d.data.family}<br/>Score moyen: ${d.data.score.toFixed(1)}%<br/>Nombre de contrôles: ${d.data.count}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function() {
+            d3.select(this).style("opacity", 0.9).style("stroke-width", "2px");
+            tooltip.style("opacity", 0);
+        });
+
+    // Labels internes si surface suffisante
+    svg.selectAll("text")
+        .data(data_ready)
+        .enter()
+        .append("text")
+        .filter(d => (d.endAngle - d.startAngle) > 0.2) // masquer les petits morceaux
+        .text(d => `${d.data.family} (${d.data.score.toFixed(0)}%)`)
+        .attr("transform", d => `translate(${arc.centroid(d)})`)
+        .style("text-anchor", "middle")
+        .style("font-size", "11px")
+        .style("font-weight", "bold")
+        .style("fill", "white");
+} 
+ 
+
+// Appels pour rafraîchir les nouveaux graphiques
+d3.select(window).on("resize", () => {
+    updatePieChart();
+    updateScatterPlot();
+});
+
+// Fonction pour générer le Treemap
+function updateTreemap() {
+    const container = d3.select("#treemap-container");
+    container.selectAll("*").remove();
+
+    const width = 600;
+    const height = 400;
+
+    const svg = container.append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(0, 0)");
+
+    // Préparation des données
+    const nestedData = d3.rollup(
+        filteredData, 
+        v => d3.sum(v, d => d.score), 
+        d => d.family, 
+        d => d.control
+    );
+
+    const root = d3.hierarchy({children: Array.from(nestedData, ([key, value]) => ({
+        name: key,
+        children: Array.from(value, ([control, score]) => ({ name: control, value: score }))
+    }))})
+    .sum(d => d.value)
+    .sort((a, b) => b.value - a.value);
+
+    const treemapLayout = d3.treemap()
+        .size([width, height])
+        .padding(2);
+
+    treemapLayout(root);
+
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    svg.selectAll("rect")
+        .data(root.leaves())
+        .enter()
+        .append("rect")
+        .attr("x", d => d.x0)
+        .attr("y", d => d.y0)
+        .attr("width", d => d.x1 - d.x0)
+        .attr("height", d => d.y1 - d.y0)
+        .attr("fill", d => color(d.parent.data.name))
+        .on("mouseover", function (event, d) {
+            tooltip.style("opacity", 1)
+                .html(`Famille: ${d.parent.data.name}<br>Contrôle: ${d.data.name}<br>Score: ${d.data.value.toFixed(1)}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0));
+
+    svg.selectAll("text")
+        .data(root.leaves())
+        .enter()
+        .append("text")
+        .attr("x", d => d.x0 + 5)
+        .attr("y", d => d.y0 + 15)
+        .text(d => d.data.name)
+        .attr("font-size", "10px")
+        .attr("fill", "white");
+}
+
+// Intégration dans la mise à jour globale
 function updateVisualizations() {
     filterData();
     updateHeatmap();
     updateBarchart();
     updateRadarChart();
     updateLineChart();
+    updatePieChart();
+    updateTreemap(); // Nouvelle fonction ajoutée
     updateTable();
 }
 
@@ -504,22 +622,6 @@ function updateRadarChart() {
         .style("text-align", "center")
         .style("background-color", "rgba(255, 255, 255, 0.9)")
         .style("border-radius", "5px");
-
-    legend.append("span")
-        .style("display", "inline-block")
-        .style("margin", "5px 10px")
-        .style("font-size", "12px")
-        .append("span")
-        .style("display", "inline-block")
-        .style("width", "12px")
-        .style("height", "12px")
-        .style("background-color", "rgba(52, 152, 219, 0.3)")
-        .style("border", "2px solid #3498db")
-        .style("margin-right", "5px")
-        .style("vertical-align", "middle");
-
-    legend.append("text")
-        .text("Score moyen par famille");
 }
 
 // Fonction pour le graphique en ligne
